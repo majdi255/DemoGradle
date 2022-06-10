@@ -10,7 +10,7 @@ pipeline {
                 } 
             }
             steps {
-                sh 'bash ./gradlew test'
+                sh './gradlew test'
             }
         }
         stage('build-jar') {
@@ -22,12 +22,17 @@ pipeline {
                 } 
             }
             steps {
-                sh 'bash ./gradlew bootJar'
+                sh './gradlew bootJar'
             }
         }
         stage('build-image') {
             steps {
                 sh 'docker build -t demo-gradle:latest .'
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh 'docker-compose up -d'
             }
         }
     }
