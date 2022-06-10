@@ -27,7 +27,7 @@ pipeline {
         }
         stage('build-image') {
             steps {
-                sh 'docker build -t DemoGradle .'
+                sh 'docker build -t demo-gradle:latest .'
             }
         }
     }
