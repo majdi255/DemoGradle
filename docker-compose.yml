@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   gradle-demo:
-    image: gradle-demo:latest
+    image: demo-gradle:latest
     restart: always
     ports:
       - "8081:8080"
