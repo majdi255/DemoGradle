@@ -41,6 +41,9 @@ spec:
       labels:
         app: demo-gradle-app
     spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
       containers:
       - name: demo-gradle
         image: 338142409401.dkr.ecr.us-east-1.amazonaws.com/demo-gradle:latest

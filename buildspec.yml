@@ -5,11 +5,7 @@ phases:
       docker: 20
       java: corretto17
     commands:
-      - yum install -yq unzip jq > /dev/null
-      - curl -sSL -o awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-      - unzip awscliv2.zip > /dev/null
-      - ./aws/install > /dev/null
-      - rm -rf aws awscliv2.zip
+      - yum install -yq jq > /dev/null
       - ECR_ADDRESS=338142409401.dkr.ecr.us-east-1.amazonaws.com
       - REPOSITORY_URI=${ECR_ADDRESS}/demo-gradle
       - EKS_VERSION=`aws eks describe-cluster --name experts-training | jq -r ".cluster.version"`
