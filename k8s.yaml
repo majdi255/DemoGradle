@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-gradle
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: demo-gradle
+  name: demo-gradle-svc
+  labels:
+    app: demo-gradle-app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: demo-gradle-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-gradle-deployment
+  namespace: demo-gradle
+  labels:
+    app: demo-gradle-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: demo-gradle-app
+  template:
+    metadata:
+      labels:
+        app: demo-gradle-app
+    spec:
+      containers:
+      - name: demo-gradle
+        image: 338142409401.dkr.ecr.us-east-1.amazonaws.com/demo-gradle:latest
+        imagePullPolicy: Always
+        ports:
+          - name: app
+            containerPort: 8080
+        resources:
+          requests:
+            cpu: '0.15'
+            memory: 0.25Gi
+          limits:
+            cpu: '2'
+            memory: 2Gi

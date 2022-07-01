@@ -1,0 +1,38 @@
+version: 0.2
+env:
+  variables:
+    JAVA_HOME: "/usr/lib/jvm/java-17-amazon-corretto.x86_64"
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+    commands:
+      - yum install -yq java-17-amazon-corretto-devel unzip jq > /dev/null
+      - curl -sSL -o awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+      - unzip awscliv2.zip > /dev/null
+      - ./aws/install > /dev/null
+      - rm -rf aws awscliv2.zip
+      - ECR_ADDRESS=338142409401.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=${ECR_ADDRESS}/demo-gradle
+      - EKS_VERSION=`aws eks describe-cluster --name experts-training | jq -r ".cluster.version"`
+      - curl -sSL -o /usr/local/bin/kubectl "https://storage.googleapis.com/kubernetes-release/release/v${EKS_VERSION}.0/bin/linux/amd64/kubectl"
+      - chmod +x /usr/local/bin/kubectl
+  pre_build:
+    commands:
+      - TAG="${REPOSITORY_BRANCH}.$(echo ${CODEBUILD_RESOLVED_SOURCE_VERSION} | head -c 8).$(date +%Y%m%d%H%M%S)"
+      - aws ecr get-login-password --region ${AWS_REGION} --output text | docker login --username AWS --password-stdin ${ECR_ADDRESS}
+  build:
+    commands:
+      - ./gradlew bootJar
+      - DOCKER_BUILDKIT=1 docker build --tag ${REPOSITORY_URI}:${TAG} .
+      - docker tag ${REPOSITORY_URI}:${TAG} ${REPOSITORY_URI}:latest
+  post_build:
+    commands:
+      - docker push ${REPOSITORY_URI}:${TAG}
+      - docker push ${REPOSITORY_URI}:latest
+      - aws eks update-kubeconfig --name experts-training
+      - export KUBECONFIG=$HOME/.kube/config
+      - kubectl apply -f k8s.yaml
+artifacts:
+  files:
+    - buildspec.yml
