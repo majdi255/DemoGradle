@@ -8,7 +8,7 @@ public class HelloController {
 
 	@GetMapping("/")
 	public String index() {
-		return "Spring Boot Gradle App! V3";
+		return "Spring Boot Gradle App!";
 	}
 
 }
