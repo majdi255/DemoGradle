@@ -4,8 +4,8 @@ pipeline {
         stage('build-jar') {
             agent {
                 docker {
-                    image 'openjdk:21'
-                    args '-v $HOME/.gradle:/root/.gradle'
+                    image 'public.ecr.aws/amazoncorretto/amazoncorretto:21'
+                    args '-u root:root -e JAVA_OPTS=-XX:UseSVE=0 -v $HOME/.gradle:/root/.gradle'
                     reuseNode true
                 }
             }
