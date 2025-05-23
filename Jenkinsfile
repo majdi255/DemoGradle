@@ -10,7 +10,9 @@ pipeline {
                 }
             }
             steps {
-                sh './gradlew test'
+                withGradle {
+                    sh './gradlew test'
+                }
             }
         }
         stage('build-jar') {
@@ -22,7 +24,9 @@ pipeline {
                 }
             }
             steps {
-                sh './gradlew bootJar'
+                withGradle {
+                    sh './gradlew bootJar'
+                }
             }
         }
         stage('build-image') {
@@ -34,6 +38,11 @@ pipeline {
             steps {
                 sh 'docker compose up -d'
             }
+        }
+    }
+    post {
+        always {
+            junit '**/build/test-results/**/*.xml'
         }
     }
 }
