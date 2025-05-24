@@ -24,6 +24,6 @@ public class HelloControllerTest {
     public void getHello() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("Spring Boot Gradle App!")));
+                .andExpect(content().string(equalTo("Spring Boot Gradle App! V2")));
     }
 }

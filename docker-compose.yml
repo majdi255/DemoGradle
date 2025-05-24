@@ -1,0 +1,10 @@
+version: "3.3"
+
+services:
+  gradle-demo:
+    image: demo-gradle:latest
+    restart: always
+    environment:
+      JAVA_OPTS: "-XX:UseSVE=0"
+    ports:
+      - "8088:8080"

@@ -34,6 +34,11 @@ pipeline {
                 sh 'docker build -t demo-gradle:latest .'
             }
         }
+        stage('deploy') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
     }
     post {
         always {
