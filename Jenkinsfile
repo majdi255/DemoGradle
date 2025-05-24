@@ -5,7 +5,7 @@ pipeline {
             agent {
                 docker {
                     image 'public.ecr.aws/amazoncorretto/amazoncorretto:21'
-                    args '-u root:root -e JAVA_OPTS=-XX:UseSVE=0 -v $HOME/.gradle:/root/.gradle'
+                    args '-u root:root -v $HOME/.gradle:/root/.gradle'
                     reuseNode true
                 }
             }
